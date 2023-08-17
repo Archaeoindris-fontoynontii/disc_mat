@@ -228,4 +228,9 @@ theorem existsIrrPowIrrEqRat : ∃ (a b : ℝ), (Irrational a ∧ Irrational b )
     apply And.intro
     apply irrational_sqrt_two
     apply isRat
-  
+
+theorem impliesProof (P Q R : Prop) (h : P → (Q → R)) : ¬R → (P → ¬Q) := by
+  rw [Imp.swap]
+  rw [imp_not_comm]
+  rw [not_not]
+  exact h
