@@ -22,7 +22,7 @@ import Mathlib.Data.Rat.Basic
 import Mathlib.Data.Rat.Lemmas
 import Mathlib.Tactic
 
-
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 def hello := "world"
 
@@ -201,4 +201,31 @@ theorem problemI : {k : ℤ | k % (6:ℤ) = 3} ⊆ {m : ℤ | m % 3 = 0} := by
   
 theorem pascalsFormula (n : ℕ) (k : ℕ) : (n.choose k) + (n.choose (k+1)) = ((n+1).choose (k+1)) := by
   rfl
+
+theorem existsIrrPowIrrEqRat : ∃ (a b : ℝ), (Irrational a ∧ Irrational b ) ∧ (¬Irrational (a^b)):= by
+  have irrOrNotIrrSqrt2powSqrt2 := em (Irrational (Real.sqrt 2 ^ Real.sqrt 2))
+  cases irrOrNotIrrSqrt2powSqrt2 with
+  | inl isIrr => 
+    apply Exists.intro (Real.sqrt 2 ^ Real.sqrt 2)
+    apply Exists.intro (Real.sqrt 2)
+    apply And.intro
+    apply And.intro
+    apply isIrr
+    apply irrational_sqrt_two
+    rw [← Real.rpow_mul (Real.sqrt_nonneg 2)]
+    rw [Real.mul_self_sqrt zero_le_two]
+    rw [Real.rpow_two]
+    rw [Real.sq_sqrt zero_le_two]
+    rw [irrational_iff_ne_rational]
+    push_neg
+    apply Exists.intro 2
+    apply Exists.intro 1
+    rw [Int.int_cast_ofNat, Int.cast_one, div_one]
+  | inr isRat =>
+    apply Exists.intro (Real.sqrt 2)
+    apply Exists.intro (Real.sqrt 2)
+    rw [and_self]
+    apply And.intro
+    apply irrational_sqrt_two
+    apply isRat
   
