@@ -205,6 +205,13 @@ theorem pascalsFormula (n : ℕ) (k : ℕ) : (n.choose k) + (n.choose (k+1)) = (
 theorem existsIrrPowIrrEqRat : ∃ (a b : ℝ), (Irrational a ∧ Irrational b ) ∧ (¬Irrational (a^b)):= by
   have irrOrNotIrrSqrt2powSqrt2 := em (Irrational (Real.sqrt 2 ^ Real.sqrt 2))
   cases irrOrNotIrrSqrt2powSqrt2 with
+  | inr isRat =>
+    apply Exists.intro (Real.sqrt 2)
+    apply Exists.intro (Real.sqrt 2)
+    rw [and_self]
+    apply And.intro
+    apply irrational_sqrt_two
+    apply isRat
   | inl isIrr => 
     apply Exists.intro (Real.sqrt 2 ^ Real.sqrt 2)
     apply Exists.intro (Real.sqrt 2)
@@ -221,16 +228,11 @@ theorem existsIrrPowIrrEqRat : ∃ (a b : ℝ), (Irrational a ∧ Irrational b )
     apply Exists.intro 2
     apply Exists.intro 1
     rw [Int.int_cast_ofNat, Int.cast_one, div_one]
-  | inr isRat =>
-    apply Exists.intro (Real.sqrt 2)
-    apply Exists.intro (Real.sqrt 2)
-    rw [and_self]
-    apply And.intro
-    apply irrational_sqrt_two
-    apply isRat
 
 theorem impliesProof (P Q R : Prop) (h : P → (Q → R)) : ¬R → (P → ¬Q) := by
-  rw [Imp.swap]
-  rw [imp_not_comm]
-  rw [not_not]
+  rw [imp.swap]
+  rw [not_imp_not]
   exact h
+
+theorem impliesProofDumb (P Q R : Prop) (h : P → (Q → R)) : ¬R → (P → ¬Q) := by
+  tauto -- I guess lean's automatic binary relation simplifier is a bit too good for this proof
